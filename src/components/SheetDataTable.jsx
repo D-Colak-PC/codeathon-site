@@ -275,6 +275,19 @@ export default function SheetDataTable() {
     setTempTeamId(e.target.value);
   };
 
+  // Format date for submission in MM/DD/YY HH:MM:SS format
+  const formatDateForSubmission = (date) => {
+    return date.toLocaleString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -314,7 +327,8 @@ export default function SheetDataTable() {
     try {
       // Prepare submission data
       const currentTime = new Date();
-      const formattedTime = currentTime.toISOString();
+      // Format date as string immediately to avoid serialization issues
+      const formattedTime = formatDateForSubmission(currentTime);
       const fileName = selectedFile.name;
       
       // Get problem name from selected problem id
@@ -327,7 +341,7 @@ export default function SheetDataTable() {
       const formData = new FormData();
       formData.append('file', selectedFile);
       formData.append('teamId', teamId);
-      formData.append('timestamp', formattedTime);
+      formData.append('timeSubmitted', formattedTime); // Send the formatted string instead of Date object
       
       // Upload file to Google Drive
       const uploadResponse = await fetch('/api/uploadFile', {
@@ -351,7 +365,7 @@ export default function SheetDataTable() {
         body: JSON.stringify({
           teamId,
           problemName: problemObj.name,
-          timeSubmitted: formattedTime,
+          timeSubmitted: formattedTime, // Use the formatted string
           fileName,
           fileLink: uploadResult.fileLink,
           language,

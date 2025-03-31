@@ -40,14 +40,11 @@ export async function POST(request) {
 
 		const sheets = google.sheets({ version: "v4", auth });
 
-		// Format the time for display
-		const formattedTime = new Date(timeSubmitted).toLocaleString();
-
 		// Prepare the row data
 		const rowData = [
 			teamId.toString(),
 			problemName,
-			formattedTime,
+			timeSubmitted, // Use the string directly
 			fileName,
 			fileLink,
 			language,

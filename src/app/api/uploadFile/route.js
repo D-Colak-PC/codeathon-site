@@ -11,17 +11,17 @@ export async function POST(request) {
 		const formData = await request.formData();
 		const file = formData.get("file");
 		const teamId = formData.get("teamId");
-		const timestamp = formData.get("timestamp");
+		const timeSubmitted = formData.get("timeSubmitted");
 
-		if (!file || !teamId || !timestamp) {
+		if (!file || !teamId || !timeSubmitted) {
 			return NextResponse.json(
 				{ error: "Missing required fields" },
 				{ status: 400 }
 			);
 		}
-
+		
 		// Format the timestamp for filename
-		const formattedTimestamp = new Date(timestamp)
+		const formattedTimestamp = timeSubmitted
 			.toISOString()
 			.replace(/:/g, "-")
 			.replace(/\..+/, "");
