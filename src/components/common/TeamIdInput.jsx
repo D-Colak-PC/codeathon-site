@@ -21,19 +21,17 @@ export default function TeamIdInput({
 					htmlFor="teamIdTop"
 					className="block text-xs font-medium text-gray-700 mb-1"
 				>
-					Team ID (1-100)
+					Team Name
 				</label>
 				<div className="flex">
 					<input
 						id="teamIdTop"
-						type="number"
-						min="1"
-						max="100"
+						type="text"
 						className="w-24 px-3 py-2 bg-white border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300"
 						value={tempTeamId}
 						onChange={handleTempTeamIdChange}
 						onKeyDown={handleTeamIdKeyDown}
-						placeholder="Team ID"
+						placeholder="Team Name"
 						style={{ appearance: "textfield" }} // Remove spinner arrows
 					/>
 					<button

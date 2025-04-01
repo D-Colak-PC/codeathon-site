@@ -34,7 +34,7 @@ export default function SubmissionTable({
 						</h3>
 					) : (
 						<h3 className="text-lg font-medium text-gray-700">
-							Enter your Team ID in the top-right corner to view
+							Enter your Team Name in the top-right corner to view
 							your submissions
 						</h3>
 					)}
@@ -95,7 +95,7 @@ export default function SubmissionTable({
 									>
 										{teamId
 											? `No submissions found for Team ${teamId}`
-											: "Enter your Team ID to view your submissions"}
+											: "Enter your Team Name to view your submissions"}
 									</td>
 								</tr>
 							)}

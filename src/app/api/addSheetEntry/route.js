@@ -39,13 +39,12 @@ export async function POST(request) {
 			);
 		}
 
-		// Validate team ID
-		const teamIdNum = parseInt(teamId);
-		if (isNaN(teamIdNum) || teamIdNum < 1 || teamIdNum > 100) {
+		// Validate team ID is provided as a non-empty string
+		if (!teamId || typeof teamId !== "string" || teamId.trim() === "") {
 			return NextResponse.json(
 				{
 					error: "Invalid team ID",
-					details: "Team ID must be a number between 1 and 100",
+					details: "Team ID must be a non-empty string",
 				},
 				{ status: 400 }
 			);
@@ -124,7 +123,7 @@ export async function POST(request) {
 
 		// Prepare the row data
 		const rowData = [
-			parseInt(teamId), // Ensure teamId is sent as a number
+			teamId, // teamId sent as a string
 			problemName,
 			formattedDate,
 			fileName,

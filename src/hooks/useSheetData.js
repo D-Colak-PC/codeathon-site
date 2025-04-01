@@ -58,14 +58,14 @@ export const useSheetData = (teamId) => {
 	const filteredData =
 		teamId && sheetData.data
 			? sheetData.data.filter(
-					(row) => row["Team ID"]?.toString() === teamId.toString()
+					(row) => row["Team Name"]?.toString() === teamId.toString()
 			  )
 			: sheetData.data || [];
 
 	// Filter out columns we don't want to display
 	const filteredHeaders = sheetData.headers
 		? sheetData.headers.filter(
-				(header) => header !== "Team ID" && header !== "File Name"
+				(header) => header !== "Team Name" && header !== "File Name"
 		  )
 		: [];
 

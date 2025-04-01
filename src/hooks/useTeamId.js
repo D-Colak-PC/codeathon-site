@@ -21,12 +21,7 @@ export const useTeamId = () => {
 
 	// Save team ID to localStorage
 	const saveTeamId = () => {
-		if (
-			tempTeamId &&
-			!isNaN(parseInt(tempTeamId)) &&
-			parseInt(tempTeamId) >= 1 &&
-			parseInt(tempTeamId) <= 100
-		) {
+		if (tempTeamId) {
 			localStorage.setItem("teamId", tempTeamId);
 			setTeamId(tempTeamId);
 
@@ -45,7 +40,7 @@ export const useTeamId = () => {
 		}
 
 		// Show validation error
-		alert("Please enter a valid Team ID (1-100)");
+		alert("Please enter a valid Team Name");
 		return false;
 	};
 

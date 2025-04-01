@@ -47,9 +47,9 @@ export const useSubmission = (teamId, fetchData) => {
 		setSubmitSuccess(false);
 
 		// Validate inputs
-		if (!teamId || parseInt(teamId) < 1 || parseInt(teamId) > 100) {
+		if (!teamId || typeof teamId !== "string" || teamId.trim() === "") {
 			setSubmitError(
-				"Please enter and save a valid Team ID (1-100) in the top-right corner"
+				"Please enter and save a valid Team Name in the top-right corner"
 			);
 			setSubmitting(false);
 			return;

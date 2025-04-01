@@ -17,7 +17,7 @@ const processLeaderboardData = (data, rankingsRef) => {
 	const teamSubmissions = {};
 
 	data.forEach((submission) => {
-		const teamId = submission["Team ID"];
+		const teamId = submission["Team Name"];
 		if (!teamId) return;
 
 		if (!teamSubmissions[teamId]) {
@@ -84,8 +84,8 @@ const processLeaderboardData = (data, rankingsRef) => {
 		if (a.lastSubmission) return -1;
 		if (b.lastSubmission) return 1;
 
-		// If neither has submissions, sort by team ID
-		return parseInt(a.teamId) - parseInt(b.teamId);
+		// If neither has submissions, sort lexicographically by team ID
+		return a.teamId.localeCompare(b.teamId);
 	});
 
 	// Add ranks and track rank changes

@@ -62,12 +62,12 @@ export default function LeaderboardCard({
 			{/* Rank number and Team ID */}
 			<div className="flex items-center mb-4">
 				<div className="text-6xl font-bold text-gray-800 mr-3">
-					{team.rank}
+					#{team.rank}
 				</div>
 
 				<div>
 					<div className="text-2xl font-semibold text-gray-700">
-						Team {team.teamId}
+						{team.teamId}
 					</div>
 					{team.teamId === currentTeamId && (
 						<div className="text-sm text-blue-500 font-medium">
