@@ -65,7 +65,7 @@ export async function GET() {
 		console.log("Fetching spreadsheet data...");
 		const response = await sheets.spreadsheets.values.get({
 			spreadsheetId: spreadsheetId,
-			range: "Sheet1!A:G", // Adjust if your sheet has a different name
+			range: "Submissions!A:G", // Adjust if your sheet has a different name
 		});
 
 		const rows = response.data.values;

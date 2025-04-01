@@ -136,7 +136,7 @@ export async function POST(request) {
 		console.log("Adding new entry to the spreadsheet...");
 		const response = await sheets.spreadsheets.values.append({
 			spreadsheetId: process.env.SPREADSHEET_ID,
-			range: "Sheet1!A:G", // 7 columns (A through G)
+			range: "Submissions!A:G", // 7 columns (A through G)
 			valueInputOption: "USER_ENTERED", // Change back to USER_ENTERED
 			insertDataOption: "INSERT_ROWS",
 			resource: {
