@@ -1,1 +1,60 @@
 @import "tailwindcss";
+
+/* Remove spinner for Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Remove spinner for Firefox */
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+/* Rank change animations */
+@keyframes rankImproved {
+	0% {
+		transform: translateY(0);
+	}
+	25% {
+		transform: translateY(-20px);
+		background-color: rgba(167, 243, 208, 0.5);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+	75% {
+		transform: translateY(-5px);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+
+@keyframes rankDecreased {
+	0% {
+		transform: translateY(0);
+	}
+	25% {
+		transform: translateY(20px);
+		background-color: rgba(254, 202, 202, 0.5);
+	}
+	50% {
+		transform: translateY(10px);
+	}
+	75% {
+		transform: translateY(5px);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+
+.animate-rank-improved {
+	animation: rankImproved 1.5s ease-in-out;
+}
+
+.animate-rank-decreased {
+	animation: rankDecreased 1.5s ease-in-out;
+}
