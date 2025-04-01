@@ -26,8 +26,6 @@ export default function SubmissionTable({
 					{teamId ? (
 						<h3 className="text-lg font-medium text-gray-700">
 							Showing submissions for Team {teamId}
-							{filteredData.length === 0 &&
-								" (No submissions yet)"}
 						</h3>
 					) : (
 						<h3 className="text-lg font-medium text-gray-700">
