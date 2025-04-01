@@ -1,8 +1,14 @@
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 
+// List of allowed languages
+const ALLOWED_LANGUAGES = ["python", "java", "javascript"];
+
+// List of valid status values
+const VALID_STATUSES = ["Not Reviewed", "In Review", "Incorrect", "Correct"];
+
 export async function POST(request) {
-    try {
+	try {
 		// Parse the request body
 		const requestData = await request.json();
 		const {
@@ -25,8 +31,62 @@ export async function POST(request) {
 			!language
 		) {
 			return NextResponse.json(
-				{ error: "Missing required fields" },
+				{
+					error: "Missing required fields",
+					details: "All fields except status are required",
+				},
 				{ status: 400 }
+			);
+		}
+
+		// Validate team ID
+		const teamIdNum = parseInt(teamId);
+		if (isNaN(teamIdNum) || teamIdNum < 1 || teamIdNum > 100) {
+			return NextResponse.json(
+				{
+					error: "Invalid team ID",
+					details: "Team ID must be a number between 1 and 100",
+				},
+				{ status: 400 }
+			);
+		}
+
+		// Validate language
+		if (!ALLOWED_LANGUAGES.includes(language.toLowerCase())) {
+			return NextResponse.json(
+				{
+					error: "Invalid language",
+					details:
+						"Language must be one of: python, java, javascript",
+				},
+				{ status: 400 }
+			);
+		}
+
+		// Validate status if provided
+		if (status && !VALID_STATUSES.includes(status)) {
+			return NextResponse.json(
+				{
+					error: "Invalid status",
+					details:
+						"Status must be one of: Not Reviewed, In Review, Incorrect, Correct",
+				},
+				{ status: 400 }
+			);
+		}
+
+		// Validate environment variables
+		if (
+			!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ||
+			!process.env.GOOGLE_PRIVATE_KEY ||
+			!process.env.SPREADSHEET_ID
+		) {
+			return NextResponse.json(
+				{
+					error: "Server configuration error",
+					details: "Missing required environment variables",
+				},
+				{ status: 500 }
 			);
 		}
 
@@ -63,18 +123,63 @@ export async function POST(request) {
 			},
 		});
 
+		// Log the success
+		console.log(`Added entry for Team ${teamId}, problem "${problemName}"`);
+
 		return NextResponse.json({
 			message: "Entry added successfully",
 			updatedRows: response.data.updates.updatedRows,
+			teamId: teamId,
+			problem: problemName,
+			timestamp: new Date().toISOString(),
 		});
 	} catch (error) {
 		console.error("Error adding sheet entry:", error);
-		return NextResponse.json(
-			{
-				error: "Failed to add entry to spreadsheet",
-				details: error.message,
-			},
-			{ status: 500 }
-		);
+
+		// Categorize errors for more helpful responses
+		if (error.message.includes("insufficientPermissions")) {
+			return NextResponse.json(
+				{
+					error: "Permission denied",
+					details:
+						"The application doesn't have permission to modify the spreadsheet",
+				},
+				{ status: 403 }
+			);
+		} else if (error.message.includes("invalid_grant")) {
+			return NextResponse.json(
+				{
+					error: "Authentication error",
+					details: "Failed to authenticate with Google Sheets API",
+				},
+				{ status: 401 }
+			);
+		} else if (error.message.includes("not found")) {
+			return NextResponse.json(
+				{
+					error: "Spreadsheet not found",
+					details:
+						"The spreadsheet ID is invalid or the spreadsheet doesn't exist",
+				},
+				{ status: 404 }
+			);
+		} else if (error.message.includes("rate")) {
+			return NextResponse.json(
+				{
+					error: "Rate limit exceeded",
+					details:
+						"Too many requests to Google Sheets API. Please try again later.",
+				},
+				{ status: 429 }
+			);
+		} else {
+			return NextResponse.json(
+				{
+					error: "Failed to add entry to spreadsheet",
+					details: error.message,
+				},
+				{ status: 500 }
+			);
+		}
 	}
 }

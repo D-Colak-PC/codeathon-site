@@ -7,6 +7,7 @@ import { useTeamId } from "../hooks/useTeamId";
 import { useSheetData } from "../hooks/useSheetData";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useSubmission } from "../hooks/useSubmission";
+import { useNotification } from "../hooks/useNotification";
 
 // Common components
 import Header from "./common/Header";
@@ -14,6 +15,7 @@ import TeamIdInput from "./common/TeamIdInput";
 import TabNavigation from "./common/TabNavigation";
 import LoadingState from "./common/LoadingState";
 import ErrorState from "./common/ErrorState";
+import Toast from "./common/Toast";
 
 // Tab-specific components
 import SubmitTab from "./submission/SubmitTab";
@@ -21,8 +23,10 @@ import LeaderboardTab from "./leaderboard/LeaderboardTab";
 
 /**
  * Main component that orchestrates the competition dashboard
+ * @param {Object} props - Component props
+ * @param {Function} props.onError - Error handler
  */
-export default function SheetDataTable() {
+export default function SheetDataTable({ onError }) {
 	const [activeTab, setActiveTab] = useState("submit");
 
 	// Initialize hooks
@@ -33,6 +37,7 @@ export default function SheetDataTable() {
 		teamIdHook.teamId,
 		sheetDataHook.fetchData
 	);
+	const notification = useNotification();
 
 	// Update leaderboard when sheet data changes
 	useEffect(() => {
@@ -40,6 +45,27 @@ export default function SheetDataTable() {
 			leaderboardHook.updateLeaderboard(sheetDataHook.sheetData);
 		}
 	}, [sheetDataHook.sheetData]);
+
+	// Show toast notification on successful submission
+	useEffect(() => {
+		if (submissionHook.submitSuccess) {
+			notification.showSuccess("Solution submitted successfully!");
+		}
+	}, [submissionHook.submitSuccess]);
+
+	// Show toast notification on submission error
+	useEffect(() => {
+		if (submissionHook.submitError) {
+			notification.showError(`Error: ${submissionHook.submitError}`);
+		}
+	}, [submissionHook.submitError]);
+
+	// Forward errors to parent component
+	useEffect(() => {
+		if (sheetDataHook.error && onError) {
+			onError(new Error(sheetDataHook.error));
+		}
+	}, [sheetDataHook.error, onError]);
 
 	// Handle loading and error states
 	if (sheetDataHook.loading && !sheetDataHook.sheetData.data) {
@@ -57,12 +83,22 @@ export default function SheetDataTable() {
 
 	return (
 		<div className="container mx-auto py-6 px-4 relative">
+			{/* Render active notifications */}
+			{notification.renderNotifications()}
+
 			{/* Team ID input (persistent across tabs) */}
 			<TeamIdInput
 				tempTeamId={teamIdHook.tempTeamId}
 				handleTempTeamIdChange={teamIdHook.handleTempTeamIdChange}
 				handleTeamIdKeyDown={teamIdHook.handleTeamIdKeyDown}
-				saveTeamId={teamIdHook.saveTeamId}
+				saveTeamId={() => {
+					const success = teamIdHook.saveTeamId();
+					if (success) {
+						notification.showSuccess(
+							`Team ID set to ${teamIdHook.tempTeamId}`
+						);
+					}
+				}}
 			/>
 
 			{/* Page Header (persistent across tabs) */}
@@ -83,7 +119,10 @@ export default function SheetDataTable() {
 					leaderboardData={leaderboardHook.leaderboardData}
 					animatingTeams={leaderboardHook.animatingTeams}
 					teamId={teamIdHook.teamId}
-					fetchData={sheetDataHook.fetchData}
+					fetchData={() => {
+						sheetDataHook.fetchData();
+						notification.showSuccess("Leaderboard refreshed");
+					}}
 				/>
 			)}
 
