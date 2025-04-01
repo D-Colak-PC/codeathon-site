@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Inter, Poppins } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
 // Configure fonts
 const inter = Inter({
@@ -58,6 +59,9 @@ export default function RootLayout({ children }) {
 						</p>
 					</div>
 				</footer>
+
+				{/* Analytics */}
+				<Analytics />
 			</body>
 		</html>
 	);
