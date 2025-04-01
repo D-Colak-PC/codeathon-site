@@ -18,13 +18,10 @@ export default function SubmissionTable({
 }) {
 	return (
 		<div className="bg-white shadow-md rounded-lg overflow-hidden">
-			<div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+			<div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
 				<h2 className="text-lg font-semibold text-gray-800">
 					Submission Results
 				</h2>
-			</div>
-
-			<div className="mb-6 flex justify-between items-center px-6 py-4">
 				<div>
 					{teamId ? (
 						<h3 className="text-lg font-medium text-gray-700">

@@ -267,7 +267,7 @@ export default function StandaloneLeaderboardPage() {
 		<div className="container mx-auto py-6 px-4">
 			<div className="text-center mb-6">
 				<h1 className="text-3xl font-bold text-gray-900 mb-2">
-					Coding Competition Leaderboard
+					Pine Crest 2025 Spring Codeathon Leaderboard
 				</h1>
 				{lastUpdated && (
 					<p className="text-sm text-gray-500">

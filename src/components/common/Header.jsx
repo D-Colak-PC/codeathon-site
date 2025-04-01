@@ -9,7 +9,7 @@ export default function Header({ lastUpdated }) {
 	return (
 		<div className="text-center mb-6">
 			<h1 className="text-3xl font-bold text-gray-900 mb-2">
-				Coding Competition Dashboard
+				Pine Crest Spring 2025 Codeathon Dashboard
 			</h1>
 			{lastUpdated && (
 				<p className="text-sm text-gray-500">

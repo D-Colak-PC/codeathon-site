@@ -17,20 +17,27 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-	title: "Code-A-Thon Competition Dashboard",
+	title: "Codeathon Competition Dashboard",
 	description:
-		"Track submissions, view results, and check the leaderboard for the coding competition",
+		"Track submissions, view results, and check the leaderboard for the Pine Crest 2025 Spring Codeathon Competition.",
 	keywords: [
 		"coding competition",
 		"hackathon",
 		"programming contest",
 		"leaderboard",
+		"codeathon",
 	],
-	authors: [{ name: "Code-A-Thon Team" }],
+	authors: [{ name: "Dennis Colak" }],
 	viewport: "width=device-width, initial-scale=1",
 	robots: {
-		index: true,
-		follow: true,
+		index: false,
+		follow: false,
+		nocache: true,
+		googleBot: {
+			index: false,
+			follow: false,
+			noimageindex: true,
+		},
 	},
 	icons: {
 		icon: "/favicon.ico",
@@ -51,12 +58,10 @@ export default function RootLayout({ children }) {
 				<footer className="mt-16 py-8 bg-gray-100 border-t border-gray-200">
 					<div className="container mx-auto px-4 text-center text-gray-500 text-sm">
 						<p>
-							© {new Date().getFullYear()} Code-A-Thon Competition
-							Dashboard
+							Built with Next.js, React, Tailwind CSS, and Google
+							APIs. Deployed on Vercel.
 						</p>
-						<p className="mt-2">
-							Powered by Next.js, Tailwind CSS, and Google Cloud
-						</p>
+						<p className="mt-2">Made by Denins Colak</p>
 					</div>
 				</footer>
 
