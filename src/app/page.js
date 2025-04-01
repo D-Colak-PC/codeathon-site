@@ -70,7 +70,7 @@ export default function Home() {
 						</svg>
 					</div>
 					<h2 className="text-center text-lg font-medium text-gray-900 mb-1">
-						You're offline
+						You&apos;re offline
 					</h2>
 					<p className="text-center text-sm text-gray-500">
 						Please check your internet connection and try again.

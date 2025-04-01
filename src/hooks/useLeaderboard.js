@@ -92,9 +92,12 @@ const processLeaderboardData = (data, rankingsRef) => {
 	const newRankings = {};
 	const animatingTeams = new Set();
 
+	// Ensure rankingsRef.current is initialized
+	const currentRankings = rankingsRef.current || {};
+
 	const rankedLeaderboard = sortedLeaderboard.map((entry, index) => {
 		const rankNum = index + 1;
-		const oldRank = rankingsRef.current[entry.teamId] || rankNum;
+		const oldRank = currentRankings[entry.teamId] || rankNum;
 
 		// Store new rank
 		newRankings[entry.teamId] = rankNum;
@@ -103,7 +106,7 @@ const processLeaderboardData = (data, rankingsRef) => {
 		if (
 			oldRank !== rankNum &&
 			oldRank !== undefined &&
-			Object.keys(rankingsRef.current).length > 0
+			Object.keys(currentRankings).length > 0
 		) {
 			animatingTeams.add(entry.teamId);
 		}
@@ -131,6 +134,7 @@ export const useLeaderboard = () => {
 	const [prevRankings, setPrevRankings] = useState({});
 	const [animatingTeams, setAnimatingTeams] = useState(new Set());
 
+	// Initialize the ref with an empty object
 	const rankingsRef = useRef({});
 
 	// Update leaderboard when new data is fetched

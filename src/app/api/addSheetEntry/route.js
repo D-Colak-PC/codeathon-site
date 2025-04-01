@@ -100,11 +100,33 @@ export async function POST(request) {
 
 		const sheets = google.sheets({ version: "v4", auth });
 
+		// Format date in MM/DD/YY HH:MM:SS format with 12-hour clock
+		let formattedDate;
+		try {
+			// If timeSubmitted is a Date object stringified in the frontend
+			const dateObj = new Date(timeSubmitted);
+
+			// Format in the desired 12-hour format for display in Google Sheets
+			formattedDate = dateObj.toLocaleString("en-US", {
+				month: "2-digit",
+				day: "2-digit",
+				year: "2-digit",
+				hour: "2-digit",
+				minute: "2-digit",
+				second: "2-digit",
+				hour12: true,
+			});
+		} catch (e) {
+			// If parsing fails, use as is
+			console.error("Error formatting date:", e);
+			formattedDate = timeSubmitted;
+		}
+
 		// Prepare the row data
 		const rowData = [
-			teamId.toString(),
+			parseInt(teamId), // Ensure teamId is sent as a number
 			problemName,
-			timeSubmitted, // Use the string directly
+			formattedDate,
 			fileName,
 			fileLink,
 			language,
@@ -116,7 +138,7 @@ export async function POST(request) {
 		const response = await sheets.spreadsheets.values.append({
 			spreadsheetId: process.env.SPREADSHEET_ID,
 			range: "Sheet1!A:G", // 7 columns (A through G)
-			valueInputOption: "USER_ENTERED",
+			valueInputOption: "USER_ENTERED", // Change back to USER_ENTERED
 			insertDataOption: "INSERT_ROWS",
 			resource: {
 				values: [rowData],
