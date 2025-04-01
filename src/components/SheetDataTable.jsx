@@ -127,7 +127,7 @@ export default function SheetDataTable({ onError }) {
 			)}
 
 			<div className="mt-4 text-center text-xs text-gray-400">
-				Data refreshes automatically every 10 seconds
+				Data refreshes automatically every 60 seconds
 			</div>
 		</div>
 	);

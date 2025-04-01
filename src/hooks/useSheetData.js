@@ -50,7 +50,7 @@ export const useSheetData = (teamId) => {
 	// Fetch data immediately when component mounts and set up polling
 	useEffect(() => {
 		fetchData();
-		const intervalId = setInterval(fetchData, 10000); // Poll every 10 seconds
+		const intervalId = setInterval(fetchData, 60000); // Poll every 60 seconds
 		return () => clearInterval(intervalId);
 	}, [fetchData]);
 
