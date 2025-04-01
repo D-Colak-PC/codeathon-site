@@ -1,19 +1,46 @@
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
+import { cache } from "react";
+
+// Cache results for 5 seconds to prevent excessive API calls
+let cachedData = null;
+let cacheTime = 0;
+const CACHE_DURATION = 5000; // 5 seconds
 
 export async function GET() {
 	try {
+		// Check if we have cached data that's still fresh
+		const now = Date.now();
+		if (cachedData && now - cacheTime < CACHE_DURATION) {
+			console.log("Serving cached sheet data");
+			return NextResponse.json(cachedData);
+		}
+
 		console.log("API route called, attempting authentication");
+
+		// Get environment variables and validate
+		const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+		const spreadsheetId = process.env.SPREADSHEET_ID;
 
 		// More robust approach to handle the private key
 		const privateKey = process.env.GOOGLE_PRIVATE_KEY
 			? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n")
 			: undefined;
 
-		console.log(
-			"Service account email:",
-			process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
-		);
+		// Validate required environment variables
+		if (!serviceAccountEmail || !privateKey || !spreadsheetId) {
+			console.error("Missing required environment variables");
+			return NextResponse.json(
+				{
+					error: "Server Configuration Error",
+					details:
+						"The server is missing required configuration. Please contact the administrator.",
+				},
+				{ status: 500 }
+			);
+		}
+
+		console.log("Service account email:", serviceAccountEmail);
 		console.log(
 			"Private key loaded:",
 			privateKey ? "Yes (length: " + privateKey.length + ")" : "No"
@@ -21,7 +48,7 @@ export async function GET() {
 
 		// Create JWT client
 		const auth = new google.auth.JWT({
-			email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+			email: serviceAccountEmail,
 			key: privateKey,
 			scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
 		});
@@ -37,7 +64,7 @@ export async function GET() {
 		// Get spreadsheet data
 		console.log("Fetching spreadsheet data...");
 		const response = await sheets.spreadsheets.values.get({
-			spreadsheetId: process.env.SPREADSHEET_ID,
+			spreadsheetId: spreadsheetId,
 			range: "Sheet1!A:G", // Adjust if your sheet has a different name
 		});
 
@@ -46,7 +73,10 @@ export async function GET() {
 		if (!rows || rows.length === 0) {
 			console.log("No data found in spreadsheet");
 			return NextResponse.json(
-				{ error: "No data found." },
+				{
+					error: "No data found.",
+					details: "The spreadsheet appears to be empty.",
+				},
 				{ status: 404 }
 			);
 		}
@@ -60,6 +90,10 @@ export async function GET() {
 			});
 			return rowData;
 		});
+
+		// Cache the result
+		cachedData = { headers, data };
+		cacheTime = now;
 
 		console.log("Data successfully retrieved");
 		return NextResponse.json({ headers, data });
@@ -85,6 +119,24 @@ export async function GET() {
 						process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
 				},
 				{ status: 404 }
+			);
+		} else if (error.message.includes("Rate Limit Exceeded")) {
+			return NextResponse.json(
+				{
+					error: "API Rate Limit Exceeded",
+					details:
+						"Too many requests to Google Sheets API. Please try again later.",
+				},
+				{ status: 429 }
+			);
+		} else if (error.message.includes("insufficient authorization")) {
+			return NextResponse.json(
+				{
+					error: "Insufficient Permissions",
+					details:
+						"The service account doesn't have permission to access this spreadsheet.",
+				},
+				{ status: 403 }
 			);
 		} else {
 			return NextResponse.json(
