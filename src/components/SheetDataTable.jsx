@@ -86,19 +86,17 @@ export default function SheetDataTable({ onError }) {
 			{/* Render active notifications */}
 			{notification.renderNotifications()}
 
-			{/* Team ID input (persistent across tabs) */}
+			{/* Team ID input / Sign In (persistent across tabs) */}
 			<TeamIdInput
+				// Pass all relevant state and handlers from the hook
 				tempTeamId={teamIdHook.tempTeamId}
+				password={teamIdHook.password}
+				isLoading={teamIdHook.isLoading}
+				error={teamIdHook.error}
 				handleTempTeamIdChange={teamIdHook.handleTempTeamIdChange}
-				handleTeamIdKeyDown={teamIdHook.handleTeamIdKeyDown}
-				saveTeamId={() => {
-					const success = teamIdHook.saveTeamId();
-					if (success) {
-						notification.showSuccess(
-							`Team ID set to ${teamIdHook.tempTeamId}`
-						);
-					}
-				}}
+				handlePasswordChange={teamIdHook.handlePasswordChange}
+				handleKeyDown={teamIdHook.handleKeyDown} // Use the unified keydown handler
+				handleSignIn={teamIdHook.handleSignIn} // Use the sign-in handler
 			/>
 
 			{/* Page Header (persistent across tabs) */}

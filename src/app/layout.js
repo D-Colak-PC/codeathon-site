@@ -19,15 +19,8 @@ const poppins = Poppins({
 
 export const metadata = {
 	title: "Codeathon Competition Dashboard",
-	description:
-		"Track submissions, view results, and check the leaderboard for the Pine Crest 2025 Spring Codeathon Competition.",
-	keywords: [
-		"coding competition",
-		"hackathon",
-		"programming contest",
-		"leaderboard",
-		"codeathon",
-	],
+	description: "Track submissions, view results, and check the leaderboard for the Pine Crest 2025 Spring Codeathon Competition.",
+	keywords: ["coding competition", "hackathon", "programming contest", "leaderboard", "codeathon"],
 	authors: [{ name: "Dennis Colak" }],
 	viewport: "width=device-width, initial-scale=1",
 	robots: {
