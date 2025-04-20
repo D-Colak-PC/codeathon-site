@@ -39,30 +39,31 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-	return (
-		<html lang="en" className={`${inter.variable} ${poppins.variable}`}>
-			<body className="bg-gray-50 min-h-screen font-sans">
-				{/* Toast container for notifications */}
-				<div id="toast-container"></div>
+	return <div>Under Maintenance</div>;
+	// return (
+	// 	<html lang="en" className={`${inter.variable} ${poppins.variable}`}>
+	// 		<body className="bg-gray-50 min-h-screen font-sans">
+	// 			{/* Toast container for notifications */}
+	// 			<div id="toast-container"></div>
 
-				{/* Page content */}
-				{children}
+	// 			{/* Page content */}
+	// 			{children}
 
-				{/* Footer */}
-				<footer className="mt-16 py-8 bg-gray-100 border-t border-gray-200">
-					<div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-						<p>
-							Built with Next.js, React, Tailwind CSS, and Google
-							APIs. Deployed on Vercel.
-						</p>
-						<p className="mt-2">Made by Denins Colak</p>
-					</div>
-				</footer>
+	// 			{/* Footer */}
+	// 			<footer className="mt-16 py-8 bg-gray-100 border-t border-gray-200">
+	// 				<div className="container mx-auto px-4 text-center text-gray-500 text-sm">
+	// 					<p>
+	// 						Built with Next.js, React, Tailwind CSS, and Google
+	// 						APIs. Deployed on Vercel.
+	// 					</p>
+	// 					<p className="mt-2">Made by Denins Colak</p>
+	// 				</div>
+	// 			</footer>
 
-				{/* Analytics */}
-				<Analytics />
-				<SpeedInsights />
-			</body>
-		</html>
-	);
+	// 			{/* Analytics */}
+	// 			<Analytics />
+	// 			<SpeedInsights />
+	// 		</body>
+	// 	</html>
+	// );
 }
